@@ -1,0 +1,60 @@
+======================================================================
+  OUT-OF-SAMPLE FORECASTING REPORT
+  100 assets, 5 models, 70/30 split, QLIKE primary
+======================================================================
+
+────────────────────────────────────────────────────────────
+  QLIKE WINNER COUNTS
+────────────────────────────────────────────────────────────
+  GARCH     :   7/100 (7%)
+  SEARCH    :  46/100 (46%)
+  GMARCH    :   7/100 (7%)
+  FIGARCH   :  20/100 (20%)
+  HYGARCH   :  20/100 (20%)
+
+─────────────────────────────────────────────────────────────────────────────────────
+  MEAN QLIKE BY ASSET CLASS
+─────────────────────────────────────────────────────────────────────────────────────
+  Class              N    GARCH   SEARCH   GMARCH  FIGARCH  HYGARCH     Best
+  ───────────────────────────────────────────────────────────────────────────
+  Commodity          7   1.4513    1.4459    1.4468    1.4492    1.4506   SEARCH
+  Crypto             4   1.9329    1.9270    1.9338    1.9227    1.9280  FIGARCH
+  Currency           6   1.4467    1.4432    1.4460    1.4431    1.4443  FIGARCH
+  Fixed Income       5   1.3441    1.3458    1.3388    1.3475    1.3462   GMARCH
+  International     10   1.4496    1.4449    1.4465    1.4429    1.4436  FIGARCH
+  Sector ETF         9   1.4375    1.4304    1.4335    1.4273    1.4272  HYGARCH
+  US Index           5   1.4755    1.4645    1.4759    1.4589    1.4589  FIGARCH
+  US Stock          53   1.6631    1.6488    1.6535    1.6482    1.6489  FIGARCH
+  Volatility         1   1.6654    1.6365    1.6628    1.6373    1.6373   SEARCH
+  ───────────────────────────────────────────────────────────────────────────
+  ALL              100   1.5791    1.5688    1.5728    1.5679    1.5686
+
+──────────────────────────────────────────────────────────────────────
+  DIEBOLD-MARIANO TEST SUMMARY (QLIKE, 5% two-sided)
+──────────────────────────────────────────────────────────────────────
+  SEARCH vs GARCH:  SEARCH wins 23, GARCH wins 3, tie 74
+  GMARCH vs GARCH:  GMARCH wins 18, GARCH wins 2, tie 80
+  FIGARCH vs GARCH:  FIGARCH wins 29, GARCH wins 2, tie 69
+  HYGARCH vs GARCH:  HYGARCH wins 25, GARCH wins 3, tie 72
+  SEARCH vs FIGARCH: SEARCH wins 8, FIGARCH wins 7, tie 85
+
+  SEARCH vs GARCH by class (DM sig at 5%):
+  Class              N  SEARCH↑   GARCH↑    Tie
+  ────────────────────────────────────────
+  Commodity          7        2        0      5
+  Crypto             4        1        1      2
+  Currency           6        1        0      5
+  Fixed Income       5        0        1      4
+  International     10        1        0      9
+  Sector ETF         9        0        0      9
+  US Index           5        0        0      5
+  US Stock          53       17        1     35
+  Volatility         1        1        0      0
+
+────────────────────────────────────────────────────────────
+  QLIKE IMPROVEMENT OVER GARCH (%)
+────────────────────────────────────────────────────────────
+  SEARCH    : median +0.49%, mean +0.62%
+  GMARCH    : median +0.27%, mean +0.39%
+  FIGARCH   : median +0.45%, mean +0.66%
+  HYGARCH   : median +0.44%, mean +0.62%
