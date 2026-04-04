@@ -1,0 +1,157 @@
+======================================================================
+  PARAMETRIC HORSE RACE — REPORT
+  100 assets, 5 models, burn-in=2J, BIC primary metric
+======================================================================
+
+────────────────────────────────────────────────────────────
+  BIC WINNER COUNTS
+────────────────────────────────────────────────────────────
+  GARCH     :   9/100 (9%)
+  SEARCH    :  70/100 (70%)
+  GMARCH    :   3/100 (3%)
+  FIGARCH   :  17/100 (17%)
+  HYGARCH   :   1/100 (1%)
+
+────────────────────────────────────────────────────────────
+  BIC WINNER BY ASSET CLASS
+────────────────────────────────────────────────────────────
+  Class              N   GARCH  SEARCH  GMARCH  FIGARCH  HYGARCH
+  ──────────────────────────────────────────────────────────
+  Commodity          7       2       4       1        .        .
+  Crypto             4       1       1       .        2        .
+  Currency           6       5       1       .        .        .
+  Fixed Income       5       1       3       .        1        .
+  International     10       .       9       .        1        .
+  Sector ETF         9       .       5       .        4        .
+  US Index           5       .       1       .        4        .
+  US Stock          53       .      46       2        4        1
+  Volatility         1       .       .       .        1        .
+
+──────────────────────────────────────────────────────────────────────
+  SHAPE PARAMETER ESTIMATES BY CLASS (medians)
+──────────────────────────────────────────────────────────────────────
+  Class             SEARCH α  GMARCH δ  GMARCH H  FIGARCH d
+  ───────────────────────────────────────────────────────
+  Commodity            0.492    -0.437     0.282      0.000
+  Crypto               0.269    -0.444     0.278      0.010
+  Currency             0.768    -0.099     0.451      0.000
+  Fixed Income         0.343    -0.497     0.252      0.058
+  International        0.341    -0.496     0.252      0.001
+  Sector ETF           0.348    -0.500     0.250      0.000
+  US Index             0.347    -0.496     0.252      0.000
+  US Stock             0.225    -0.499     0.251      0.028
+  Volatility           0.000    -0.499     0.250      0.000
+
+════════════════════════════════════════════════════════════════════════════════════════════════════
+  FULL RESULTS
+════════════════════════════════════════════════════════════════════════════════════════════════════
+  Ticker   Class          Winner      GARCH   SEARCH   GMARCH  FIGARCH  HYGARCH
+  ──────────────────────────────────────────────────────────────────────────────────────────────────
+  DBA      Commodity      GARCH        2670      2678      2678      2685      2693
+  DBB      Commodity      SEARCH       6074      6062      6067      6077      6085
+  DBC      Commodity      SEARCH       5377      5363      5370      5375      5384
+  GLD      Commodity      SEARCH       5078      5070      5077      5087      5095
+  SLV      Commodity      SEARCH       9782      9777      9778      9788      9798
+  UNG      Commodity      GMARCH      13074     13076     13074     13091     13099
+  USO      Commodity      GARCH       10900     10905     10904     10910     10918
+  BTC-USD  Crypto         FIGARCH     12333     12336     12340     12319     12328
+  ETH-USD  Crypto         FIGARCH      9717      9706      9718      9706      9714
+  LTC-USD  Crypto         GARCH       15146     15153     15153     15159     15167
+  XRP-USD  Crypto         SEARCH      10388     10367     10390     10371     10379
+  FXA      Currency       GARCH        1046      1053      1054      1062      1071
+  FXB      Currency       GARCH        -821      -818      -815      -809      -801
+  FXC      Currency       GARCH       -2220     -2211     -2211     -2205     -2196
+  FXE      Currency       GARCH       -1344     -1336     -1337     -1328     -1319
+  FXF      Currency       GARCH        -142      -128      -116      -107      -109
+  FXY      Currency       SEARCH       -494      -509      -503      -498      -490
+  HYG      Fixed Income   SEARCH      -3929     -3994     -3960     -3954     -3943
+  IEF      Fixed Income   GARCH       -4842     -4838     -4837     -4828     -4820
+  LQD      Fixed Income   SEARCH      -4703     -4744     -4731     -4741     -4733
+  SHY      Fixed Income   FIGARCH    -23086    -23079    -23080    -23088    -23071
+  TLT      Fixed Income   SEARCH       3444      3434      3437      3442      3450
+  EWA      International  SEARCH       9314      9278      9295      9288      9296
+  EWC      International  SEARCH       7270      7243      7255      7252      7260
+  EWG      International  SEARCH       9277      9268      9279      9270      9278
+  EWH      International  SEARCH       8926      8908      8919      8912      8921
+  EWJ      International  SEARCH       7694      7668      7678      7681      7689
+  EWT      International  SEARCH      10114     10081     10101     10089     10098
+  EWU      International  FIGARCH      7277      7272      7280      7268      7276
+  EWY      International  SEARCH      11685     11680     11691     11682     11710
+  EWZ      International  SEARCH      14315     14296     14305     14308     14317
+  FXI      International  SEARCH      10281     10266     10273     10280     10288
+  XLB      Sector ETF     SEARCH       8442      8402      8421      8407      8415
+  XLE      Sector ETF     SEARCH      10921     10913     10918     10922     10931
+  XLF      Sector ETF     FIGARCH      8484      8430      8466      8425      8434
+  XLI      Sector ETF     SEARCH       6798      6771      6781      6779      6787
+  XLK      Sector ETF     FIGARCH      8302      8250      8288      8247      8256
+  XLP      Sector ETF     SEARCH       2789      2781      2787      2791      2800
+  XLU      Sector ETF     SEARCH       5905      5878      5884      5890      5898
+  XLV      Sector ETF     FIGARCH      4893      4888      4898      4883      4892
+  XLY      Sector ETF     FIGARCH      7378      7360      7380      7351      7359
+  DIA      US Index       FIGARCH      4281      4247      4274      4239      4248
+  IWM      US Index       SEARCH       8854      8844      8857      8845      8853
+  MDY      US Index       FIGARCH      7090      7068      7087      7061      7070
+  QQQ      US Index       FIGARCH      8138      8107      8138      8092      8101
+  SPY      US Index       FIGARCH      4968      4924      4956      4896      4905
+  AAPL     US Stock       SEARCH      13944     13911     13932     13913     13922
+  ABT      US Stock       SEARCH       9578      9553      9558      9564      9573
+  AMD      US Stock       SEARCH      21496     21454     21466     21465     21474
+  AMZN     US Stock       HYGARCH     16489     16295     16480     16352     16262
+  BA       US Stock       SEARCH      13247     13199     13219     13208     13217
+  BAC      US Stock       SEARCH      12952     12887     12905     12903     12912
+  BRK-B    US Stock       SEARCH       6973      6946      6958      6966      6975
+  C        US Stock       SEARCH      13469     13405     13427     13416     13425
+  CAT      US Stock       SEARCH      13378     13372     13378     13386     13394
+  CL       US Stock       SEARCH       7698      7652      7684      7660      7668
+  COP      US Stock       SEARCH      12936     12922     12923     12927     12940
+  COST     US Stock       SEARCH       9904      9840      9876      9851      9860
+  CSCO     US Stock       SEARCH      12806     12706     12795     12711     12719
+  CVX      US Stock       SEARCH      10358     10355     10360     10361     10370
+  DIS      US Stock       SEARCH      11635     11597     11625     11600     11609
+  DUK      US Stock       SEARCH       7737      7695      7709      7709      7718
+  F        US Stock       SEARCH      15669     15582     15629     15591     15599
+  GE       US Stock       SEARCH      12165     12083     12103     12088     12096
+  GOOG     US Stock       SEARCH      10347     10318     10324     10324     10333
+  GS       US Stock       SEARCH      12879     12838     12847     12852     12861
+  HD       US Stock       SEARCH      10599     10574     10581     10583     10592
+  HON      US Stock       SEARCH      10281     10222     10247     10231     10239
+  IBM      US Stock       FIGARCH     10160     10109     10143     10109     10117
+  INTC     US Stock       SEARCH      14839     14732     14780     14735     14743
+  JNJ      US Stock       FIGARCH      6047      6052      6053      6043      6051
+  JPM      US Stock       SEARCH      12006     11946     11972     11965     11973
+  KO       US Stock       SEARCH       6397      6355      6364      6370      6379
+  MA       US Stock       FIGARCH      8623      8598      8620      8592      8600
+  MCD      US Stock       SEARCH       8012      7974      7984      7979      7988
+  META     US Stock       SEARCH       7705      7676      7680      7682      7690
+  MMM      US Stock       SEARCH      10167     10059     10146     10075     10084
+  MRK      US Stock       SEARCH      11204     11169     11186     11177     11186
+  MS       US Stock       SEARCH      14417     14387     14396     14400     14408
+  MSFT     US Stock       SEARCH      11450     11417     11424     11430     11439
+  MU       US Stock       SEARCH      19542     19540     19542     19547     19555
+  NFLX     US Stock       GMARCH      17972     17978     17971     17975     17984
+  NKE      US Stock       SEARCH      12545     12433     12464     12442     12451
+  NVDA     US Stock       SEARCH      19624     19519     19582     19529     19537
+  ORCL     US Stock       SEARCH      13581     13538     13578     13551     13550
+  PEP      US Stock       SEARCH       6302      6239      6277      6246      6254
+  PFE      US Stock       SEARCH       9937      9903      9916      9907      9916
+  PG       US Stock       SEARCH       6317      6294      6302      6307      6316
+  SLB      US Stock       SEARCH      14784     14781     14783     14788     14802
+  SO       US Stock       SEARCH       6406      6373      6385      6387      6396
+  SPG      US Stock       SEARCH      11474     11421     11447     11433     11442
+  T        US Stock       SEARCH       9417      9356      9369      9361      9370
+  TSLA     US Stock       GMARCH      11902     11902     11902     11911     11919
+  TXN      US Stock       SEARCH      13597     13573     13582     13595     13604
+  UNH      US Stock       SEARCH      12452     12387     12433     12394     12403
+  V        US Stock       SEARCH       6748      6720      6734      6726      6734
+  VNQ      US Stock       SEARCH       6867      6844      6850      6857      6865
+  WMT      US Stock       FIGARCH      8517      8464      8485      8462      8471
+  XOM      US Stock       SEARCH       9916      9909      9914      9921      9929
+  ^VIX     Volatility     FIGARCH     29534     29488     29537     29481     29490
+
+────────────────────────────────────────────────────────────
+  SUMMARY
+────────────────────────────────────────────────────────────
+  SEARCH vs GARCH (BIC): median ΔBIC = -26.8, wins 85/100
+  GMARCH vs GARCH (BIC): median ΔBIC = -12.7, wins 76/100
+  FIGARCH vs GARCH (BIC): median ΔBIC = -18.7, wins 78/100
+  HYGARCH vs GARCH (BIC): median ΔBIC = -10.2, wins 66/100
