@@ -1,4 +1,15 @@
 """
+LEGACY PIPELINE — 100-ASSET JBES SUBMISSION (SUPERSEDED)
+=========================================================
+THIS FILE IS FROM THE ORIGINAL 100-ASSET PIPELINE.
+Results here (SEARCH wins 70/100 by BIC, median BIC improvement -26.8) are
+from the old 100-asset run and are NOT reported in the current paper.
+
+The current paper (JAE target, 2026) does not claim in-sample BIC advantage as a
+primary finding. See src/run_battery_500.py and src/verify_paper_numbers.py for the
+current pipeline.
+=========================================================
+
 THE SHAPE OF VOLATILITY MEMORY — Horse Race (Section 7)
 ========================================================
 Estimate 5 parametric models on all assets, compare by BIC.

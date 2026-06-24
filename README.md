@@ -1,256 +1,216 @@
 # The Shape of Volatility Memory
 
 **Replication code for Yatawara (2026)**
-
-This repository provides the complete code to replicate all empirical results in "The Shape of Volatility Memory," submitted to the *Journal of Business and Economic Statistics*.
+Submitted to the *Journal of Applied Econometrics*.
 
 ## Overview
 
-The paper estimates the ARCH(infinity) memory kernel nonparametrically for 100 financial assets across nine asset classes (2000-2026) and finds that 93% reject GARCH's exponential decay. The kernel is sub-exponential, well-described by a stretched exponential with shape parameter alpha that varies systematically across asset classes. A parametric model embedding this kernel (SEARCH) achieves the lowest BIC for 70 of 100 assets and produces significant out-of-sample forecasting gains at short horizons.
+This paper estimates the ARCH(infinity) memory kernel nonparametrically for 500
+financial assets across multiple asset classes (2000-2026). The estimator (SEARCH:
+Stretched-Exponential ARCH) fits a parametric stretched-exponential kernel
+`g(j) = exp(-c(j^alpha - 1))` to a sieve-estimated spline kernel. The core
+findings are:
+
+- **500 assets** spanning US equities, international equities, sector ETFs, fixed
+  income, commodities, currencies, and cryptocurrencies (VIX/VXN excluded).
+- **352 identified assets** survive an identification quarantine that removes
+  assets with non-identified alpha (floor/cap hits, bimodal optimizer, non-stationary
+  fits, degenerate standard errors).
+- **300 / 352 = 85.2%** of identified assets reject geometric (exponential) decay at
+  the 5% level using a correctly-sized parametric bootstrap (B = 999). The bootstrap
+  controls size; the analytic likelihood-ratio test is oversized and is not the
+  primary inference tool.
+- **Median alpha = 0.25** (identified subset), indicating sub-exponential memory
+  ordering across asset classes: equity indices and US stocks cluster near 0.25-0.35;
+  fixed income and currencies near 0.53-0.59.
+- **Summability (identified subset, n=352):** 121 summable (34%) / 10 long-memory (3%) /
+  221 indeterminate (63%) (~12:1 summable-to-long-memory ratio; true long memory is rare, ~3% of assets).
+- **Near-geometric classes:** UNRESOLVED -- bootstrap power is low (0.10-0.40 for
+  alpha in 0.7-0.8 at median sample size T=3000-6654) so assets near the geometric
+  boundary cannot be classified.
+- **No out-of-sample edge:** SEARCH does not systematically beat GARCH at any
+  horizon in the 500-asset run. The in-sample kernel shape finding does not translate
+  to OOS forecast gains.
+- **Bootstrap size/power (T = 6654, t5 innovations):** size 3-5%; power 0.40 / 0.26
+  / 0.10 at alpha = 0.6 / 0.7 / 0.8.
 
 ## Repository Structure
 
 ```
 .
 ├── README.md
-├── requirements.txt
+├── CITATION.cff
 ├── LICENSE
 ├── data/
-│   └── shape_of_memory_100.csv      # User must provide (see Data section)
-├── src/
-│   ├── core_final.py                # Core estimation module
-│   ├── parametric_final.py          # Parametric model estimators (5 models)
-│   ├── run_discovery.py             # Section 5: Nonparametric discovery + Monte Carlo
-│   ├── run_horse_race.py            # Section 7: In-sample BIC comparison
-│   ├── run_oos.py                   # Section 8: Multi-horizon OOS forecasting
-│   └── generate_tables.py           # All LaTeX tables and publication figures
-└── results/
-    ├── discovery/                   # Kernel estimation results (K=6, K=8, K=12)
-    ├── montecarlo/                  # Monte Carlo validation (1000 reps x 3 DGPs)
-    ├── horse_race/                  # Parametric model BIC comparison
-    └── oos/                         # Multi-horizon OOS forecasting results
+│   └── (see Data section -- raw returns panel not in repo)
+├── src/                              # CURRENT 500-asset pipeline
+│   ├── kernel_engine.py              # ARCH(inf) kernel estimator (SEARCH + sieve)
+│   ├── run_battery_500.py            # Main 500-asset estimation driver
+│   ├── boot_exp_500.py               # Exponential-null bootstrap (500 assets)
+│   ├── boot_b999.py                  # B=999 bootstrap driver
+│   ├── boot_exp_B999_driver.py       # B=999 identified-subset bootstrap
+│   ├── ident_robustness.py           # Identification quarantine criteria
+│   ├── run_identified_subset.py      # Tabulates identified-subset headline numbers
+│   ├── run_size_power.py             # Monte Carlo size/power of bootstrap test
+│   ├── mc_validate.py                # MC validation (small pilot)
+│   ├── mc_full.py                    # MC full run (N_MC=500 reps)
+│   └── verify_paper_numbers.py       # Cross-checks all headline numbers vs results
+├── results/
+│   ├── identified_subset/
+│   │   ├── identified_subset_results.csv   # Alpha, SE, boot p-value, ident flags (n=352)
+│   │   ├── boot_exp_B999.csv               # B=999 bootstrap per asset (500 assets)
+│   │   ├── size_power_curve.csv            # Bootstrap size/power by (alpha_true, T)
+│   │   ├── disclosure_table.csv            # Identification quarantine waterfall
+│   │   ├── disclosure_table.md             # Same, formatted
+│   │   └── HEADLINE_NUMBERS.md             # Canonical headline numbers (source of truth)
+│   ├── summability/
+│   │   ├── asset_results.csv               # Full estimation output (500 assets)
+│   │   └── summability_verdict.csv         # Summability lens: summable/long-mem/indet
+│   └── montecarlo/
+│       └── mc_full.csv                     # MC full run results (N_MC=500)
+├── figures/                          # Publication figures (see figures/ note below)
+└── functions/                        # LEGACY 100-ASSET PIPELINE (SUPERSEDED -- see note)
+    ├── core_final.py
+    ├── parametric_final.py
+    ├── generate_tables.py
+    ├── run_discovery.py              # LEGACY: 100-asset; does not reproduce current paper
+    ├── run_horse_race.py             # LEGACY: 100-asset BIC race; not current paper
+    └── run_oos.py                    # LEGACY: 100-asset OOS; current paper has no OOS edge
 ```
+
+**Note on `functions/`:** These scripts are from the original 100-asset pipeline that
+was submitted to JBES. They contain old numbers (93% reject rate, SEARCH wins 70/100
+BIC, OOS gains) that are NOT from the current paper. They are retained for provenance
+only. Each file carries a `LEGACY PIPELINE` notice at the top. Do not use them to
+reproduce current results.
+
+**Note on `figures/`:** Professional publication figures are maintained separately
+by the figure-generation pipeline. If present, they include kernel-overlay plots,
+alpha-by-class boxplots, and size/power curves aligned with the current paper.
 
 ## Data
 
-The analysis requires a CSV file `shape_of_memory_100.csv` with the following columns:
+The 500-asset return panel (`returns_500.csv`) was assembled from Yahoo Finance using
+`src/download_assets.py` and `src/build_returns.py`. The file is approximately 120 MB
+and is not included in this repository.
 
-| Column   | Description                                      |
-|----------|--------------------------------------------------|
-| Date     | Trading date (YYYY-MM-DD)                        |
-| Ticker   | Asset ticker (e.g., SPY, AAPL, BTC-USD)          |
-| LogRet   | Daily log return in percentage (100 x log(P_t/P_{t-1})) |
-| Class    | Asset class (US Stock, US Index, Sector ETF, International, Currency, Commodity, Fixed Income, Crypto, Volatility) |
-| Name     | Full asset name                                  |
-| Sector   | Sub-sector classification                        |
+**To obtain the data:**
+- Run `src/download_assets.py` followed by `src/build_returns.py` (requires `yfinance`).
+- The universe is defined in `src/universe_500.csv` (checked in with `run_battery_500.py`).
+- Sample period: 3 January 2000 through 17 June 2026. An asset is retained only if it
+  has at least 1,500 trading days and trades through at least May 2026.
+- VIX and VXN are excluded from all analysis (volatility indices, not return series).
 
-The dataset contains 100 assets:
-- 53 US individual stocks
-- 5 US equity indices (SPY, QQQ, DIA, IWM, MDY)
-- 9 US sector ETFs (XLB through XLY)
-- 10 international equity ETFs
-- 6 currency ETFs
-- 7 commodity ETFs
-- 5 fixed income ETFs
-- 4 cryptocurrencies (BTC, ETH, LTC, XRP)
-- 1 volatility index (VIX)
-
-Sample period: January 2000 to March 2026 (6,599 observations for assets with full histories).
-
-Place the file in `data/shape_of_memory_100.csv`.
+The results CSVs in `results/` are the full analysis outputs and can be inspected
+without the raw data.
 
 ## Installation
 
 ```bash
-pip install -r requirements.txt
+pip install numpy scipy pandas matplotlib statsmodels joblib yfinance
 ```
 
-Python 3.10 or later is required. All code uses NumPy, SciPy, Pandas, and Matplotlib only.
+Python 3.10 or later required. The estimation pipeline uses `joblib` for
+parallelization (up to 32 workers).
 
-## Replication Steps
+## How to Reproduce
 
-All commands are run from the `src/` directory. Results are saved to `results/`.
+All paths below assume you have `returns_500.csv` in a location accessible to
+the scripts. By default the scripts look for it relative to the `_redo/results/`
+path structure; edit the `ROOT` constant at the top of each script if your layout
+differs.
 
-### Step 1: Nonparametric Discovery and Monte Carlo (Section 5)
-
-Estimates the ARCH(infinity) kernel via penalized spline QMLE for all 100 assets at K=6, K=8, and K=12 knot specifications, then runs Monte Carlo validation with 1000 replications under three DGPs (GARCH, SEARCH, FIGARCH).
+### Step 1: Kernel estimation -- 500-asset battery
 
 ```bash
 cd src/
-python run_discovery.py ../data/shape_of_memory_100.csv --workers 32
+python run_battery_500.py --workers 32
 ```
 
-**Expected runtime:** 30-60 minutes with 32 cores.
+Estimates the sieve kernel and fits SEARCH for all 500 assets.
+Output: `asset_results.csv` (500 rows, alpha, SE, LR stat, etc.).
+Runtime: approximately 2-4 hours with 32 workers.
 
-**Output:**
-```
-results/discovery/
-  discovery_K6.csv          # Full results for K=6
-  discovery_K8.csv          # Full results for K=8 (primary)
-  discovery_K12.csv         # Full results for K=12
-  REPORT_DISCOVERY.txt      # Summary tables
-
-results/montecarlo/
-  montecarlo_garch.csv      # 1000 reps under GARCH null
-  montecarlo_search.csv     # 1000 reps under SEARCH (alpha=0.55)
-  montecarlo_figarch.csv    # 1000 reps under FIGARCH (d=0.40)
-  REPORT_MONTECARLO.txt     # Summary statistics
-```
-
-**Key results:**
-- LR rejects GARCH: 93/100 (identical at K=6, K=8, K=12)
-- Median alpha: 0.272 (K=8)
-- MC GARCH rejection rate: 2.2% (correct size at 5% nominal)
-
-### Step 2: Parametric Horse Race (Section 7)
-
-Estimates five parametric models (GARCH, SEARCH, GMARCH, FIGARCH, HYGARCH) on all 100 assets and compares by BIC.
+### Step 2: Bootstrap test (B = 999)
 
 ```bash
-python run_horse_race.py ../data/shape_of_memory_100.csv --workers 32
+python boot_exp_B999_driver.py --workers 32
 ```
 
-**Expected runtime:** 5-15 minutes with 32 cores.
+Runs the correctly-sized parametric bootstrap for the geometric-null hypothesis.
+Output: `boot_exp_B999.csv` (500 rows, reject_exp_boot, p_boot, n_boot_ok).
+Runtime: approximately 12-24 hours with 32 workers.
 
-**Output:**
-```
-results/horse_race/
-  horse_race_results.csv          # BIC values for all 5 models x 100 assets
-  REPORT_HORSE_RACE.txt           # Winner counts, shape parameters
-  fig_bic_winner_by_class.pdf     # Figure: BIC winners by asset class
-```
-
-**Key results:**
-- BIC winners: SEARCH 70, FIGARCH 17, GARCH 9, GMARCH 3, HYGARCH 1
-- Median BIC improvement over GARCH: SEARCH -26.8
-
-### Step 3: Multi-Horizon Out-of-Sample Forecasting (Section 8)
-
-Fixed-parameter design: estimate on first 70%, forecast last 30%. Evaluates all five models at 11 horizons (h = 1, 5, 10, 22, 44, 66, 88, 110, 132, 154, 176 days).
+### Step 3: Identified-subset headline numbers
 
 ```bash
-python run_oos.py ../data/shape_of_memory_100.csv --workers 32
+python run_identified_subset.py
 ```
 
-**Expected runtime:** 5-15 minutes with 32 cores.
+Pure tabulation -- no stochastic steps. Applies the identification quarantine
+(Proposition 2 criteria a-e) and computes the 85.2% headline.
+Output: `identified_subset_results.csv`, `disclosure_table.csv`, `HEADLINE_NUMBERS.md`.
 
-**Output:**
-```
-results/oos/
-  oos_multihorizon.csv                # QLIKE values for all models x horizons x assets
-  REPORT_OOS_MULTIHORIZON.txt         # Winner counts, DM tests, class-level results
-  fig_qlike_by_class.pdf              # Figure: QLIKE improvement by class
-```
-
-**Key results:**
-- h=1: SEARCH wins 45/100, FIGARCH 24/100, GARCH 6/100
-- h=10: crossover; GARCH wins 45/100
-- h=176: GARCH wins 65/100
-- DM tests at h=1: SEARCH significantly beats GARCH for 23 assets (3 reversals)
-
-### Step 4: Tables and Figures (All Sections)
-
-Generates all LaTeX tables and publication-quality figures from the results files.
+### Step 4: Bootstrap size and power
 
 ```bash
-python generate_tables.py
+python run_size_power.py --nmc 500 --B 199 --njobs 32
 ```
 
-**Output:**
-```
-tables/
-  tab_descriptive.tex       # Table: Descriptive statistics (Section 4)
-  tab_full_K8.tex           # Table: Full discovery results (Appendix A)
-  tab_kernel_values.tex     # Table: Kernel values at selected lags (Appendix B)
+Monte Carlo size and power across T in {3000, 6654, 10000} and alpha_true in
+{1.0, 0.9, 0.8, 0.7, 0.6, 0.5}, t5 innovations.
+Output: `size_power_curve.csv`.
+Runtime: approximately 6-12 hours with 32 workers.
 
-figures/
-  fig_kernel_overlay.pdf    # Figure 1: All 100 kernels (Section 5.2)
-  fig_alpha_by_class.pdf    # Figure 2: Alpha by asset class (Section 5.4)
-  fig_cross_K.pdf           # Figure 3: Cross-K stability (Section 5.5)
-  fig_vix_kernel.pdf        # Figure 4: VIX kernel (Section 5.7)
-  fig_mc_garch.pdf          # Figure 5a: MC GARCH histogram (Section 5.8)
-  fig_mc_search.pdf         # Figure 5b: MC SEARCH histogram (Section 5.8)
-  fig_mc_figarch.pdf        # Figure 5c: MC FIGARCH histogram (Section 5.8)
+### Step 5: Verify all headline numbers
+
+```bash
+python verify_paper_numbers.py
 ```
 
-Note: `generate_tables.py` requires `shape_of_memory_100.csv` for the descriptive statistics table and the discovery/montecarlo CSV files for the remaining tables and figures. Run Steps 1-3 first.
+Cross-checks all reported numbers against the results CSVs. Should produce zero
+discrepancies if Steps 1-4 have run successfully.
 
-## Module Documentation
+## Key Results (Pre-computed in `results/`)
 
-### core_final.py
+| Metric | Value |
+|--------|-------|
+| Total assets | 500 |
+| Identified subset (after quarantine) | 352 |
+| Reject geometric, bootstrap B=999 (identified) | 300 / 352 = 85.2% |
+| Median alpha (identified subset) | 0.25 |
+| Summable kernels (identified subset, n=352) | 121 / 352 (34%) |
+| Long-memory kernels (identified subset, n=352) | 10 / 352 (3%) |
+| Indeterminate (identified subset, n=352) | 221 / 352 (63%) |
+| Bootstrap size (T=6654, alpha=1.0, t5) | 3.0% |
+| Bootstrap power (T=6654, alpha=0.6, t5) | 39.8% |
+| Bootstrap power (T=6654, alpha=0.7, t5) | 25.6% |
+| OOS edge (SEARCH vs GARCH) | None |
 
-Core estimation module. Contains:
+## Identification Quarantine (Proposition 2)
 
-| Function | Description |
-|----------|-------------|
-| `archinf_filter(r, omega, a, gamma, g)` | Vectorized ARCH(infinity) filter via numpy convolution |
-| `gaussian_nll(r, sigma2)` | Gaussian quasi-negative-log-likelihood with 2J burn-in |
-| `garch_estimate(r, n_restarts=5)` | GJR-GARCH(1,1) via ARCH(infinity) filter |
-| `kernel_estimate(r, knot_lags, lam_mono=10)` | Nonparametric spline kernel estimation |
-| `stretched_exponential_fit(g)` | Post-hoc NLS fit of stretched exponential |
-| `lr_test(llf_spline, llf_garch, K)` | Likelihood ratio test (df = K-1) |
-| `simulate_gjr_garch(T, omega, a, gamma, beta)` | Simulate from GJR-GARCH(1,1) |
-| `simulate_search(T, omega, a, gamma, c, alpha)` | Simulate from SEARCH model |
-| `simulate_figarch(T, omega, a, gamma, phi1, beta1, d)` | Simulate from FIGARCH(1,d,1) |
+Assets excluded from the 352-asset identified subset:
 
-**Critical design choice:** GARCH is estimated via the ARCH(infinity) filter (not the standard GARCH recursion) so that its log-likelihood is directly comparable to the spline. The GARCH kernel is g(j) = beta^{j-1} for j = 1, ..., 252. This ensures the LR test is valid.
+| Criterion | N excluded |
+|-----------|-----------|
+| (a) alpha < 0.05 (floor, non-identified) | 79 |
+| (b) alpha at upper cap (3.0) | 10 |
+| (c) Sign-flipped / bimodal optimizer | 2 (unique) |
+| (d) Persistence P >= 1 (non-stationary) | 3 (unique) |
+| (e) Degenerate SE (SE = 0 or SE > alpha) | 54 (unique) |
+| **Total excluded** | **148** |
 
-### parametric_final.py
-
-Parametric model estimators. Imports `archinf_filter`, `gaussian_nll`, and `garch_estimate` from `core_final`. All models share the same filter and burn-in, ensuring BIC values are directly comparable.
-
-| Function | Model | Kernel | Parameters |
-|----------|-------|--------|------------|
-| `search_estimate()` | SEARCH | exp[-c(j^alpha - 1)] | 5 (omega, a, gamma, c, alpha) |
-| `gmarch_estimate()` | GMARCH | j^delta exp[-lambda(j-1)] | 5 (omega, a, gamma, delta, lambda) |
-| `figarch_estimate()` | FIGARCH | BBM recursion | 6 (omega, a, gamma, d, phi, beta1) |
-| `hygarch_estimate()` | HYGARCH | (1-tau)GARCH + tau FIGARCH | 7 (omega, a, gamma, d, phi, beta1, tau) |
-| `estimate_all_models()` | All 5 | - | Runs GARCH + 4 alternatives |
-
-Each estimator seeds from the GARCH optimum and uses multiple random restarts. The nesting constraint guarantees LLF(alternative) >= LLF(GARCH).
-
-## Technical Notes
-
-### Burn-in
-
-All estimation uses a burn-in of 2J = 504 observations (two full years of trading days). The first J = 252 observations after the truncation lag are used to initialize the conditional variance; the next J observations are discarded to mitigate initialization effects. The effective sample size is T_eff = T - 2J.
-
-### BIC Computation
-
-BIC = log(T_eff) x k - 2 x LLF, where k is the number of parameters and T_eff = T - 504.
-
-### Knot Positions
-
-| K | Knot lags |
-|---|-----------|
-| 6 | 1, 5, 21, 63, 126, 252 |
-| 8 | 1, 2, 5, 10, 21, 63, 126, 252 |
-| 12 | 1, 2, 5, 10, 15, 21, 42, 63, 84, 126, 189, 252 |
-
-### Monte Carlo DGP Parameters
-
-| DGP | Parameters | Persistence |
-|-----|------------|-------------|
-| GARCH | omega=0.05, a=0.03, gamma=0.07, beta=0.93 | P = 0.93 |
-| SEARCH | omega=0.05, a=0.006, gamma=0.008, c=1.5, alpha=0.55 | P = 0.93 |
-| FIGARCH | omega=0.05, a=0.005, gamma=0.005, phi1=0.30, beta1=0.20, d=0.40 | P = 0.93 |
-
-### Multi-Step Forecasting
-
-The h-step-ahead forecast uses the ARCH(infinity) recursion:
-
-E_t[sigma^2_{t+h}] = omega + sum_{j=h}^{J} g(j) w_{t+h-j} + (a + gamma/2) sum_{j=1}^{h-1} g(j) E_t[sigma^2_{t+h-j}]
-
-The first sum uses observed news impacts; the second iterates on previous forecasts. The realized proxy is the squared return r^2_{t+h}. Loss function: QLIKE, which is robust to proxy noise (Patton, 2011).
+Full details in `results/identified_subset/disclosure_table.csv`.
 
 ## Citation
 
 ```bibtex
-@unpublished{Yatawara2026,
-  author = {Anjana Yatawara},
-  title  = {The Shape of Volatility Memory},
-  note   = {Department of Mathematics, California State University, Bakersfield},
-  year   = {2026}
+@article{Yatawara2026,
+  author  = {Anjana Yatawara},
+  title   = {The Shape of Volatility Memory},
+  journal = {Journal of Applied Econometrics},
+  year    = {2026},
+  note    = {Submitted. Department of Mathematics and Statistics, California State University, Bakersfield}
 }
 ```
 

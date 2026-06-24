@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this code or results, please cite the paper as below."
+authors:
+  - family-names: Yatawara
+    given-names: Anjana
+    affiliation: "Department of Mathematics and Statistics, California State University, Bakersfield"
+title: "The Shape of Volatility Memory"
+year: 2026
+abstract: >
+  Nonparametric estimation of the ARCH(infinity) memory kernel for 500 financial
+  assets finds that 85.2% of 352 identified assets reject geometric (GARCH) decay
+  via a correctly-sized parametric bootstrap; the median shape parameter is 0.25,
+  indicating sub-exponential memory; true long memory is rare (~3%); no out-of-sample
+  forecasting edge over GARCH is found.
+journal: "Journal of Applied Econometrics"
+type: article
+status: submitted

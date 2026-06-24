@@ -1,8 +1,16 @@
 """
+LEGACY PIPELINE — 100-ASSET JBES SUBMISSION (SUPERSEDED)
+=========================================================
+THIS FILE IS FROM THE ORIGINAL 100-ASSET PIPELINE.
+Results here claimed OOS forecasting gains for SEARCH at h=1; those claims are
+NOT made in the current paper. The 500-asset full run (src/run_battery_500.py +
+src/verify_paper_numbers.py) finds NO systematic OOS edge for SEARCH over GARCH.
+=========================================================
+
 THE SHAPE OF VOLATILITY MEMORY — Multi-Horizon OOS Forecasting
 ================================================================
 Fixed-parameter design: estimate on first 70%, forecast last 30%.
-Multi-step forecasts via ARCH(∞) recursion.
+Multi-step forecasts via ARCH(infinity) recursion.
 Horizons: h = 1, 5, 10, 22, 44, 66, 88, 110, 132, 154, 176
 
 Usage:

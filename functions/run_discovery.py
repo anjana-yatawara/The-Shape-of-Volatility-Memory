@@ -1,4 +1,20 @@
 """
+LEGACY PIPELINE — 100-ASSET JBES SUBMISSION (SUPERSEDED)
+=========================================================
+THIS FILE IS FROM THE ORIGINAL 100-ASSET PIPELINE (pre-rebuild, JBES submission).
+It does NOT reproduce the current paper numbers.
+
+The current 500-asset pipeline is in src/:
+  kernel_engine.py, run_battery_500.py, boot_b999.py, boot_exp_B999_driver.py,
+  run_identified_subset.py, run_size_power.py, mc_full.py, verify_paper_numbers.py
+
+Current headline (Journal of Applied Econometrics target, 2026):
+  500 assets; 352 identified; 300/352 = 85.2% reject geometric (B=999 bootstrap);
+  median alpha 0.25; no OOS edge over GARCH; target journal JAE.
+
+Do not use this script to reproduce the current paper.
+=========================================================
+
 THE SHAPE OF VOLATILITY MEMORY — Production Runner (Final)
 ============================================================
 Runs everything, saves to organized results/ folder.
